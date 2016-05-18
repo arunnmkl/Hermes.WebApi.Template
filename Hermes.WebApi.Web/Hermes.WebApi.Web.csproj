@@ -49,9 +49,6 @@
     <Reference Include="Hermes.WebApi.Extensions">
       <HintPath>..\References\Assembly\Hermes.WebApi.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="Hermes.WebApi.Security">
-      <HintPath>..\References\Assembly\Hermes.WebApi.Security.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
       <Private>True</Private>
@@ -206,6 +203,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Hermes.WebApi.Security\Hermes.WebApi.Security.csproj">
+      <Project>{8b89bfdc-0109-4a17-85c2-46153918c11d}</Project>
+      <Name>Hermes.WebApi.Security</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
