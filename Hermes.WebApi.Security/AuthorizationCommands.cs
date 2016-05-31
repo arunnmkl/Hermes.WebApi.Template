@@ -8,7 +8,7 @@ using Hermes.WebApi.Security.Models;
 namespace Hermes.WebApi.Security
 {
     /// <summary>
-    /// 
+    /// Authorization commands
     /// </summary>
     internal class AuthorizationCommands
     {
@@ -215,6 +215,18 @@ namespace Hermes.WebApi.Security
         /// <param name="permissionId">The permission identifier.</param>
         /// <returns>authorization type</returns>
         public static Models.Enums.AuthorizationType CheckAuthorization(Guid resourceId, IList<string> securityIds, int permissionId)
+        {
+            return AuthSql.CheckAuthorization(resourceId, securityIds, permissionId);
+        }
+
+        /// <summary>
+        /// Checks the authorization.
+        /// </summary>
+        /// <param name="resourceId">The resource identifier.</param>
+        /// <param name="securityIds">The security ids.</param>
+        /// <param name="permissionId">The permission identifier.</param>
+        /// <returns></returns>
+        public static Models.Enums.AuthorizationType CheckAuthorization(Guid resourceId, IList<Guid> securityIds, int permissionId)
         {
             return AuthSql.CheckAuthorization(resourceId, securityIds, permissionId);
         }

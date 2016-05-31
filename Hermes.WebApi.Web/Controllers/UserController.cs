@@ -8,6 +8,7 @@ using System.Net;
 using System;
 using Hermes.WebApi.Extensions.Authentication;
 using Hermes.WebApi.Extensions;
+using Hermes.WebApi.Core.Security;
 
 namespace Hermes.WebApi.Web.Controllers
 {
@@ -43,35 +44,27 @@ namespace Hermes.WebApi.Web.Controllers
         [Route("details")]
         public HttpResponseMessage GetDetails()
         {
-            ClaimsPrincipal principal = Request.GetRequestContext().Principal as ClaimsPrincipal;
+            HermesPrincipal principal = Request.GetRequestContext().Principal as HermesPrincipal;
 
             if (principal != null && principal.Identity.IsAuthenticated)
             {
                 string name = principal.Identity.Name;
                 string authenticationType = principal.Identity.AuthenticationType;
-                string username = string.Empty;
-                string securityId = string.Empty;
-                string userAuthTokenId = string.Empty;
+                string username = principal.Username;
+                Guid securityId = principal.SecurityId;
+                string userAuthTokenId = principal.UserAuthTokenId;
+                IEnumerable<string> roles = principal.Roles;
                 int timeInSeconds = 0;
-                IEnumerable<string> roles = null;
-                var cIdentity = principal.Identities.FirstOrDefault();
 
-                if (cIdentity != null)
+                var userAuthToken = AuthenticationCommands.GetUserAuthTokenById(userAuthTokenId);
+
+                if (userAuthToken != null)
                 {
-                    username = cIdentity.FindFirst(ClaimTypes.Name).Value;
-                    securityId = cIdentity.FindFirst(ClaimTypes.Sid).Value;
-                    roles = cIdentity.FindAll(ClaimTypes.Role).Select(r => r.Value);
-                    userAuthTokenId = cIdentity.FindFirst("UserAuthToken").Value;
-
-                    var userAuthToken = AuthenticationCommands.GetUserAuthTokenById(userAuthTokenId);
-
-                    if (userAuthToken != null)
-                    {
-                        // Validate expiration time if present
-                        DateTimeOffset currentUtc = Startup.OAuthBearerOptions.SystemClock.UtcNow;
-                        timeInSeconds = (int)((userAuthToken.ExpiresUtc - currentUtc).TotalSeconds);
-                    }
+                    // Validate expiration time if present
+                    DateTimeOffset currentUtc = Startup.OAuthBearerOptions.SystemClock.UtcNow;
+                    timeInSeconds = (int)((userAuthToken.ExpiresUtc - currentUtc).TotalSeconds);
                 }
+
 
                 object responseMessage = new
                 {
